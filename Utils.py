@@ -95,13 +95,13 @@ def get_coordinates(xyz=None, centr=None):
     """
 
     X = np.array([centr[0], centr[1], 1])
-    K = np.load(join(project_root, 'July_project\data\cameradata\\newcam_mtx.npy'))
+    K = np.load(join(project_root, 'July_project\data\cameradata\newcam_mtx.npy'))
 
     R = np.array([[0, 1, 0],
                   [1, 0, 0],
                   [0, 0, 1]])
+
     Z = get_correct_z(xyz[2]) - CAMERA_SHIFTING[2] + TOOL_HEIGHT
-    print(Z)
     K_inv = np.linalg.inv(K)
     T_flange = np.array([xyz[0], xyz[1], 0])
     T_cam = np.array(CAMERA_SHIFTING)

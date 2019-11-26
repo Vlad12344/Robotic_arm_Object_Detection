@@ -15,5 +15,6 @@ k_means.py
 test.py
 robot_test.py
 *.png
-readme.txt
 *.hdf5
+tt_test.py
+calibration_config.py

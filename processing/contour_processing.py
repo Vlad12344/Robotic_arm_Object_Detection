@@ -66,7 +66,6 @@ def watershed(gray):
 
     contours = cv2.watershed(bgr,markers)
     contours = np.argwhere(contours[1:-1,1:-1] == -1)
-    print(contours)
     return contours
 # --------------------------------------------------------------
 def angle_center(contour):
