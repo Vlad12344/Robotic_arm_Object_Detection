@@ -14,7 +14,7 @@ finalized_model.sav
 k_means.py
 test.py
 robot_test.py
-*.png
 *.hdf5
 tt_test.py
 calibration_config.py
+predict.png
