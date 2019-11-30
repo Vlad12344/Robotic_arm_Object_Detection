@@ -2,8 +2,7 @@
 
   This repository is the result of a summer internship at Rozum Robotics company. Our goal was to teach robotic arm to detect objects(cube) on work place and sort it by colors.
   
-  https://www.youtube.com/watch?v=yIhqKh4P_Z4&feature=youtu.be
-[![Alt text](https://www.youtube.com/watch?v=yIhqKh4P_Z4&feature=youtu.be)
+[![Alt text](https://www.youtube.com/watch?v=yIhqKh4P_Z4&feature=youtu.be)]
 
 # Equipment:
 
