@@ -95,7 +95,7 @@ def get_coordinates(xyz=None, centr=None):
     """
 
     X = np.array([centr[0], centr[1], 1])
-    K = np.load(join(project_root, 'July_project\data\cameradata\newcam_mtx.npy'))
+    K = np.load(join(project_root, 'July_project\data\cameradata\\newcam_mtx.npy'))
 
     R = np.array([[0, 1, 0],
                   [1, 0, 0],
@@ -116,6 +116,19 @@ def save_matrix(path, matrix):
 def get_correct_z(z):
     new_z = z + CAMERA_SHIFTING[2] - OBJECT_HEIGHT
     return new_z
+
+def distance_between_planes(z_old, z_new):
+    """
+    Calculate offset between base plane and work place. Need for changing robot base
+
+    :param z_old: distance between end gripper point and zero base
+    :param z_new: distance between camera matrix and chessboard calibration desk
+
+    """
+    # distance between camera matrix and zero base
+    z_old = z_old + config.TOOL_HEIGHT + config.CAMERA_SHIFTING[2] - config.CHESSBOARD_THICKNESS
+
+    return z_old - z_new
 
 def tic():
     """Start a stopwatch timer"""
