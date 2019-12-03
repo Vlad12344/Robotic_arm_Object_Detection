@@ -139,6 +139,16 @@ def matrix_mult(*args):
             raise AssertionError('Dimansions are not equal')
     return result
 
+def dim3_2_dim4(M):
+    """
+    Convert 3 dimensional matrix to 4 dimension
+
+    :param M: 3 dimensional matrix
+    """
+    H = np.eye(4)
+    H[0:3, 0:3] = M
+    return H
+
 def pose_2_RRPosition(H):
     H = Pose_2_TxyzRxyz(H)
     xyz = H[0:3]
