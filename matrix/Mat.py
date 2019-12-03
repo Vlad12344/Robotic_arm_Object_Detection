@@ -130,6 +130,9 @@ def invH(matrix):
     """Returns the inverse of a homogeneous matrix"""
     return np.transpose(matrix)
 
+def transpose(H):
+    return np.transpose(H)
+
 def matrix_mult(*args):
     result = np.eye(len(args[0][0]))
     for i in args:
@@ -146,7 +149,9 @@ def dim3_2_dim4(M):
     :param M: 3 dimensional matrix
     """
     H = np.eye(4)
-    H[0:3, 0:3] = M
+    shape = M.shape()
+    H[0:shape[0], 0:shape[1]] = M
+
     return H
 
 def pose_2_RRPosition(H):

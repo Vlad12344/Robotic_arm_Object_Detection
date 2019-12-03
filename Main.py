@@ -54,16 +54,20 @@ def create_tool(radius, height, name):
 
 create_tool(0.075, 0.065, name='Soska')
 
+def get_coordinates(pose, flange_position):
+    coordinates = pose * transl(flange_position) * transl()
+
 def detect(img, robot_position):
     predict = nn_model.predict(img)[:,:,0]
     image_saving(predict, name='predict.png')
     # background_off = erase_background(img, mask=predict)
     contours = find_contours(predict)
     maximum_contour = max_contour(contours)
-    angle, centr = angle_center(maximum_contour)
+    angle, centre = angle_center(maximum_contour)
     # img = white_balance(img, 5)
     mean_color = mean_color_in_contour(img, maximum_contour)
-    cordinates = Utils.get_coordinates(xyz=robot_position, centr=centr)
+    pose = Utils.pose(xyz=robot_position, centr=centre)
+    coordinates = 
     predicted_color = KMeans.predict(mean_color)
     mask = eraze_backgraund(img, mask=predict)
     # image_with_bbox = draw_bounding_box(img, maximum_contour, centr)

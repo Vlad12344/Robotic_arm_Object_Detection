@@ -2,54 +2,17 @@ import math
 import numpy as np
 
 from config import *
-from matrix.Mat import transl
+from matrix.Mat import transl, dim3_2_dim4, invH, transpose
 from os.path import dirname, join
 
 project_root = dirname(dirname(__file__))
 
 # --------------------------------------------------------------
-def work_place_size(z):
-    """
-    :param z: distance between work place and camera. Measured in meters
-    :return: work place height and width. Measured im meters
-    """
-
-    H = 2 * math.tan(math.radians(alpha) / 2) * z
-    W = 2 * math.tan(math.radians(betta) / 2) * z
-
-    return H, W
-# --------------------------------------------------------------
-def camera_matrix(z):
-        """
-            Getting the transformation matrix, that allows to
-        transform pixels to mm
-
-        :param z: distance between work place and camera. Measured in meters
-        :return: transformation matrix
-
-        Variables:
-
-        W, H - workplace width and height in meters
-        coef - transformation coefficient, that transformate pixels to meters
-        """
-
-        H, W = work_place_size(z)
-
-        coef_x = W / resolution[1]
-        coef_y = H / resolution[0]
-
-        camera_matrix = np.array([[coef_x, 0, 0, -W / 2],
-                                  [0, coef_y, 0, -H / 2],
-                                  [0, 0, 1, 0],
-                                  [0, 0, 0, 1]])
-
-        return camera_matrix
-# --------------------------------------------------------------
-def camera_shift_mtx(camera_bias):
-    return transl(camera_bias)
+def tool_shift_mtx(tool_shift_x, tool_shift_y, tool_shift_z):
+    return transl(tool_shift_x, tool_shift_y, tool_shift_z)
 #---------------------------------------------------------------
 
-def get_coordinates(xyz=None, centr=None):
+def get_pose(xyz=None, centr=None):
     """
     Getting the center of the object relative robotic arm
 
@@ -96,18 +59,25 @@ def get_coordinates(xyz=None, centr=None):
 
     X = np.array([centr[0], centr[1], 1])
     K = np.load(join(project_root, 'July_project\data\cameradata\\newcam_mtx.npy'))
+    K = dim3_2_dim4(K)
 
     R = np.array([[0, 1, 0],
                   [1, 0, 0],
                   [0, 0, 1]])
 
+    R = dim3_2_dim4(R)
+    K_inv = invH(K)
     Z = z_relative_tothe_camera(xyz[2])
-    K_inv = np.linalg.inv(K)
-    T_flange = np.array([xyz[0], xyz[1], 0])
-    T_cam = np.array(CAMERA_SHIFTING)
-    T = T_flange + T_cam
-    coordinates = K_inv.dot(X).dot(R) * Z + T
+    # T_flange = np.array([xyz[0], xyz[1], 0])
+    # T_cam = np.array(CAMERA_SHIFTING)
+    # T = T_flange + T_cam
+    # coordinates = K_inv.dot(X).dot(R) * Z + T
+    pose = K_inv.dot(X).dot(R) * Z
+    # return {'x':coordinates[0], 'y':coordinates[1], 'z':coordinates[2]}
+    return pose
 
+def get_coordinates(pose, flange_position, shifting):
+    coordinates = pose.dot(transpose(flange_position)).dot(transpose(shifting))
     return {'x':coordinates[0], 'y':coordinates[1], 'z':coordinates[2]}
 
 def save_matrix(path, matrix):
