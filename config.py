@@ -1,4 +1,6 @@
 # CAMERA
+SOURCE_CAMERA = 0
+CAMERA_MATRIX_DIR = 'data/camera_data'
 
 camera_shifting = [0, 0, 0]
 camera_number=0
@@ -18,7 +20,7 @@ ALPHA = 31.549972
 BETTA = 40.8607246
 
 # FRAME
-undistored = True
+UNDISTORTED = True
 
 data_path = 'data/'
 
