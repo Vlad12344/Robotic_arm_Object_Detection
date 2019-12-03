@@ -26,7 +26,7 @@ interface.show()
 # Инициализация и подгрузка нейронной сети, задание смещения камеры
 nn_model = Model()
 KMeans = K_Means()
-stream = VideoStream(0)
+stream = VideoStream(1)
 robot.change_base(position([0,0,0], [0, 0, 0]))
 roll, pitch = 0.03246304741369637, 0.00466594677358616
 robot.change_base(position([0,0,-0.128], [roll, -pitch, 0]))
@@ -142,7 +142,7 @@ def define_camera_place():
     camera_x_coordinate = (
         interface.furthest_corner[0] + interface.nearest_corner[0]) / 2 + 0.035
     camera_y_coordinate = (
-        interface.furthest_corner[1] + interface.nearest_corner[1]) / 2 + 0.065
+        interface.furthest_corner[1] + interface.nearest_corner[1]) / 2 + 0.3
     camera_coordinates = position(
         [camera_x_coordinate, camera_y_coordinate, 0.40], [math.pi, 0, -math.pi/4])
     return camera_coordinates

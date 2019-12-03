@@ -20,7 +20,7 @@ class Model:
 
         model = Unet(backbone_name='resnet18', input_shape=(None, None, 3), decoder_filters=(64, 32, 32, 16, 4),
                      encoder_weights='imagenet', classes=1, encoder_freeze=True,)
-        model.load_weights(self.data_path + '/weights/new.hdf5')
+        model.load_weights(self.data_path + 'weights/new.hdf5')
         model.compile('Adam', 'bce_jaccard_loss', metrics=['iou_score'])
         return model
 

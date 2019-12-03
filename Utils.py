@@ -95,7 +95,7 @@ def get_coordinates(xyz=None, centr=None):
     """
 
     X = np.array([centr[0], centr[1], 1])
-    K = np.load(join(project_root, 'July_project\data\cameradata\\newcam_mtx.npy'))
+    K = np.load(join(project_root, 'Robotic_arm_Object_Detection/data/cameradata/newcam_mtx.npy'))
 
     R = np.array([[0, 1, 0],
                   [1, 0, 0],
