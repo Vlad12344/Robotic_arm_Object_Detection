@@ -14,7 +14,7 @@ def mean_color_in_contour(image, contour):
     img = image_processing.eraze_backgraund(image, mask=mask)
     normalize_img = image_processing.normalize(img)
     mean_val = cv2.mean(normalize_img, mask=mask)
-    mean_color = np.array([[mean_val[2], mean_val[1], mean_val[0]]], dtype='uint8')
+    mean_color = np.array([[mean_val[0], mean_val[1], mean_val[2]]], dtype='uint8')
 
     return mean_color
 

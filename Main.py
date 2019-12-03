@@ -67,7 +67,7 @@ def detect(img, robot_position):
     predicted_color = KMeans.predict(mean_color)
     mask = eraze_backgraund(img, mask=predict)
     # image_with_bbox = draw_bounding_box(img, maximum_contour, centr)
-    image_saving(mask, name="{}.png".format(np.random.randint(0,1000)))
+    # image_saving(mask, name="{}.png".format(np.random.randint(0,1000)))
     features = feature_vector(cordinates, angle, predicted_color)
     return features
 
@@ -144,7 +144,7 @@ def define_camera_place():
     camera_y_coordinate = (
         interface.furthest_corner[1] + interface.nearest_corner[1]) / 2 + 0.3
     camera_coordinates = position(
-        [camera_x_coordinate, camera_y_coordinate, 0.40], [math.pi, 0, -math.pi/4])
+        [camera_x_coordinate, camera_y_coordinate, 0.45], [math.pi, 0, -math.pi/4])
     return camera_coordinates
 
 def set_home_position():
@@ -174,7 +174,7 @@ def keyboardControl(key):
                                             [SHIFT_LIST[0],
                                              SHIFT_LIST[1],
                                              SHIFT_LIST[2]]), 10)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
         elif key == 'A':
             robot.set_position(position([xyz_list[0] + 0.05,
                                             xyz_list[1],
@@ -182,7 +182,7 @@ def keyboardControl(key):
                                             [SHIFT_LIST[0],
                                              SHIFT_LIST[1],
                                              SHIFT_LIST[2]]), 10)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
         elif key == 'S':
             robot.set_position(position([xyz_list[0],
                                             xyz_list[1] + 0.05,
@@ -190,7 +190,7 @@ def keyboardControl(key):
                                             [SHIFT_LIST[0],
                                              SHIFT_LIST[1],
                                              SHIFT_LIST[2]]), 10)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
         elif key == 'D':
             robot.set_position(position([xyz_list[0] - 0.05,
                                             xyz_list[1],
@@ -198,7 +198,7 @@ def keyboardControl(key):
                                             [SHIFT_LIST[0],
                                              SHIFT_LIST[1],
                                              SHIFT_LIST[2]]), 10)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
         elif key == 'Space':
             robot.set_position(position([xyz_list[0],
                                             xyz_list[1],
@@ -206,7 +206,7 @@ def keyboardControl(key):
                                             [SHIFT_LIST[0],
                                              SHIFT_LIST[1],
                                              SHIFT_LIST[2]]), 10)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
         elif key == 'C':
             robot.set_position(position([xyz_list[0],
                                             xyz_list[1],
@@ -214,12 +214,12 @@ def keyboardControl(key):
                                             [SHIFT_LIST[0],
                                              SHIFT_LIST[1],
                                              SHIFT_LIST[2]]), 10)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
         elif key == 'Q':
-            robot.open_gripper()
+            robot.open_gripper(1)
         elif key == 'E':
-            robot.close_gripper()
-        print(get_coordinates(current_position))
+            robot.close_gripper(1)
+        # print(get_coordinates(current_position))
     except PulseApiException as e:
         QMessageBox.warning(
             interface, 'Внимание!',
@@ -285,25 +285,25 @@ def pick_new_block():
     if interface.enableColorPalletising.isChecked() or not interface.enableAllDetails.isChecked():
         speed = int(interface.comboSpeed.currentText())
         robot.set_position(camera_position, speed)
-        robot.await_motion()
+        robot.await_motion(asking_interval=0.001)
         img = stream.read()
         features = detect(img,get_coordinates(robot.get_position()))
         if type(features) != str:
-            robot.set_position(position([features[0][0], features[0][1], 0.35],
-                                        [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
-                                        speed)
-            robot.await_motion()
+            # robot.set_position(position([features[0][0], features[0][1], 0.35],
+            #                             [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
+            #                             speed)
+            robot.await_motion(asking_interval=0.001)
             robot.set_position(position([features[0][0], features[0][1], 0.04],
                                         [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
                                         speed,
                                         motion_type=MT_LINEAR)
-            robot.await_motion()
-            robot.open_gripper()
-            robot.set_position(position([features[0][0], features[0][1], 0.35],
+            robot.await_motion(asking_interval=0.001)
+            robot.open_gripper(1)
+            robot.set_position(position([features[0][0], features[0][1], 0.15],
                                         [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
                                         speed,
                                         motion_type=MT_LINEAR)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
             return 'Continue'
         else:
             return None
@@ -311,27 +311,27 @@ def pick_new_block():
         if type(features) != str:
             robot.set_position(position([features[CURRENT_BLOCK][0],
                                         features[CURRENT_BLOCK][1],
-                                        0.35],
+                                        0.15],
                                         [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
                                         speed)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
             robot.set_position(position([features[CURRENT_BLOCK][0],
                                         features[CURRENT_BLOCK][1],
-                                        0.3],
+                                        0.04],
                                         [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
                                         speed,
                                         motion_type=MT_LINEAR)
-            robot.await_motion()
-            robot.open_gripper()
+            robot.await_motion(asking_interval=0.001)
+            robot.open_gripper(1)
             robot.set_position(position([features[CURRENT_BLOCK][0],
                                         features[CURRENT_BLOCK][1],
-                                        0.35],
+                                        0.15],
                                         [SHIFT_LIST[0],
                                         SHIFT_LIST[1],
                                         SHIFT_LIST[2]]),
                                         speed,
                                         motion_type=MT_LINEAR)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
             return 'Continue'
         else:
             return None
@@ -341,7 +341,7 @@ def pallet():
     if interface.enableAllDetails.isChecked():
         speed = int(interface.comboSpeed.currentText())
         robot.set_position(camera_position, speed)
-        robot.await_motion()
+        robot.await_motion(asking_interval=0.001)
         img = stream.read()
         # features = detect(img, get_coordinates(robot.get_position()))
         # new = SHIFT_LIST[2] - float(features[0][3])
@@ -355,27 +355,27 @@ def pallet():
                 next_y = pallet_furthest_point[1] + y * \
                     (detail_size + between_details)
                 new = SHIFT_LIST[2] - float(features[0][3])
-                robot.set_position(position([next_x, next_y, 0.35],
+                robot.set_position(position([next_x, next_y, 0.15],
                                             [SHIFT_LIST[0],
                                                 SHIFT_LIST[1],
                                                 new]),
                                     speed)
-                robot.await_motion()
+                robot.await_motion(asking_interval=0.001)
                 robot.set_position(position([next_x, next_y, 0.04],
                                             [SHIFT_LIST[0],
                                                 SHIFT_LIST[1],
                                                 new]),
                                     speed,
                                     motion_type=MT_LINEAR)
-                robot.await_motion()
-                robot.close_gripper()
-                robot.set_position(position([next_x, next_y, 0.35],
-                                            [SHIFT_LIST[0],
-                                                SHIFT_LIST[1],
-                                                new]),
-                                    speed,
-                                    motion_type=MT_LINEAR)
-                robot.await_motion()
+                robot.await_motion(asking_interval=0.001)
+                robot.close_gripper(1)
+                # robot.set_position(position([next_x, next_y, 0.15],
+                #                             [SHIFT_LIST[0],
+                #                                 SHIFT_LIST[1],
+                #                                 new]),
+                #                     speed,
+                #                     motion_type=MT_LINEAR)
+                robot.await_motion(asking_interval=0.001)
                 CURRENT_BLOCK += 1
             else:
                 reply = QMessageBox.question(interface, 'Внимание',
@@ -416,25 +416,24 @@ def color_pallet():
                 detail_size + between_details)
             next_y = pallet_furthest_point[1] + CURRENT_PALLET_Y * (
                 detail_size + between_details)
-            robot.set_position(position([next_x, next_y, 0.35],
+            robot.set_position(position([next_x, next_y, 0.15],
                                 [SHIFT_LIST[0], SHIFT_LIST[1], new]),
                                 speed)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
             robot.set_position(position([next_x, next_y, 0.04],
                                 [SHIFT_LIST[0], SHIFT_LIST[1], new]),
                                 speed,
                                 motion_type=MT_LINEAR)
-            robot.await_motion()
-            robot.close_gripper()
-            robot.set_position(position([next_x, next_y, 0.35],
+            robot.await_motion(asking_interval=0.001)
+            robot.close_gripper(1)
+            robot.set_position(position([next_x, next_y, 0.06],
                                 [SHIFT_LIST[0], SHIFT_LIST[1], new]),
                                 speed,
                                 motion_type=MT_LINEAR)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
             CURRENT_BLOCK += 1
             color_pallet()
         else:
-            print(interface.PALLET_LIST)
             new = SHIFT_LIST[2] - float(features[0][3])
             interface.PALLET_LIST[CURRENT_COLOR].append(
                 len(interface.PALLET_LIST[CURRENT_COLOR]))
@@ -445,21 +444,21 @@ def color_pallet():
                 detail_size + between_details)
             next_y = pallet_furthest_point[1] + CURRENT_PALLET_Y * (
                 detail_size + between_details)
-            robot.set_position(position([next_x, next_y, 0.35],
+            robot.set_position(position([next_x, next_y, 0.15],
                                 [SHIFT_LIST[0], SHIFT_LIST[1], new]),
                                 speed)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
             robot.set_position(position([next_x, next_y, 0.04],
                                 [SHIFT_LIST[0], SHIFT_LIST[1], new]),
                                 speed,
                                 motion_type=MT_LINEAR)
-            robot.await_motion()
-            robot.close_gripper()
-            robot.set_position(position([next_x, next_y, 0.35],
+            robot.await_motion(asking_interval=0.001)
+            robot.close_gripper(1)
+            robot.set_position(position([next_x, next_y, 0.06],
                                 [SHIFT_LIST[0], SHIFT_LIST[1], new]),
                                 speed,
                                 motion_type=MT_LINEAR)
-            robot.await_motion()
+            robot.await_motion(asking_interval=0.001)
             CURRENT_BLOCK += 1
             color_pallet()
     else:

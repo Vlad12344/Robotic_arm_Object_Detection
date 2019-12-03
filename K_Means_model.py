@@ -7,7 +7,7 @@ class K_Means:
         self.loaded_model = self.load()
 
     def load(self):
-        loaded_model = pickle.load(open(self.path + 'k-means/k_means_colors.sav', 'rb'))
+        loaded_model = pickle.load(open(self.path + 'k-means/finalized_model.sav', 'rb'))
         return loaded_model
 
     def predict(self, mean):

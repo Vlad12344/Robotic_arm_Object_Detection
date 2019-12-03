@@ -14,7 +14,14 @@ finalized_model.sav
 k_means.py
 test.py
 robot_test.py
+<<<<<<< HEAD
 *.png
 readme.txt
 *.hdf5
 ve/
+=======
+*.hdf5
+tt_test.py
+calibration_config.py
+predict.png
+>>>>>>> b0fdf6993bc35780a3f5b4f6b176d9de548f1209
