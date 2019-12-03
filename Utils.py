@@ -113,8 +113,11 @@ def get_coordinates(xyz=None, centr=None):
 def save_matrix(path, matrix):
     return np.save(path, matrix)
 
-def get_correct_z(z):
-    new_z = z + CAMERA_SHIFTING[2] - OBJECT_HEIGHT
+def z_relative_tothe_camera(z):
+    """
+    :param z: distance between end gripper point and base
+    """
+    new_z = z + TOOL_HEIGHT - CAMERA_SHIFTING[2] - OBJECT_HEIGHT
     return new_z
 
 def distance_between_planes(z_old, z_new):
