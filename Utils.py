@@ -101,7 +101,7 @@ def get_coordinates(xyz=None, centr=None):
                   [1, 0, 0],
                   [0, 0, 1]])
 
-    Z = get_correct_z(xyz[2]) - CAMERA_SHIFTING[2] + TOOL_HEIGHT
+    Z = z_relative_tothe_camera(xyz[2])
     K_inv = np.linalg.inv(K)
     T_flange = np.array([xyz[0], xyz[1], 0])
     T_cam = np.array(CAMERA_SHIFTING)
@@ -115,6 +115,8 @@ def save_matrix(path, matrix):
 
 def z_relative_tothe_camera(z):
     """
+    Calculate distance between camera and object
+
     :param z: distance between end gripper point and base
     """
     new_z = z + TOOL_HEIGHT - CAMERA_SHIFTING[2] - OBJECT_HEIGHT
@@ -126,7 +128,6 @@ def distance_between_planes(z_old, z_new):
 
     :param z_old: distance between end gripper point and zero base
     :param z_new: distance between camera matrix and chessboard calibration desk
-
     """
     # distance between camera matrix and zero base
     z_old = z_old + config.TOOL_HEIGHT + config.CAMERA_SHIFTING[2] - config.CHESSBOARD_THICKNESS

@@ -292,6 +292,9 @@ def pick_new_block():
             # robot.set_position(position([features[0][0], features[0][1], 0.35],
             #                             [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
             #                             speed)
+            target_positions=[position([features[0][0], features[0][1], 0.04], [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
+                              position([features[0][0], features[0][1], 0.15], [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]])]
+
             robot.await_motion(asking_interval=0.001)
             robot.set_position(position([features[0][0], features[0][1], 0.04],
                                         [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
@@ -304,17 +307,30 @@ def pick_new_block():
                                         speed,
                                         motion_type=MT_LINEAR)
             robot.await_motion(asking_interval=0.001)
+            # robot.run_positions(target_positions[0], velocity=speed, motion_type=MT_LINEAR)
+            # robot.await_motion(0.001)
+            # robot.run_positions(target_positions[1], velocity=speed, motion_type=MT_LINEAR)
+            # robot.await_motion(0.001)
+            # robot.open_gripper(1)
             return 'Continue'
         else:
             return None
     elif not interface.enableColorPalletising.isChecked() or interface.enableAllDetails.isChecked():
         if type(features) != str:
-            robot.set_position(position([features[CURRENT_BLOCK][0],
-                                        features[CURRENT_BLOCK][1],
-                                        0.15],
-                                        [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
-                                        speed)
-            robot.await_motion(asking_interval=0.001)
+
+            target_positions = [position([features[CURRENT_BLOCK][0], features[CURRENT_BLOCK][1], 0.15], [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
+                                position([features[CURRENT_BLOCK][0], features[CURRENT_BLOCK][1], 0.04], [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]])]
+
+            # robot.run_positions(target_positions[0:2], velosity=speed, motion_type=MT_LINEAR)
+            # robot.open_gripper(1)
+            # robot.run_positions(target_positions[0], velocity=speed, motion_type=MT_LINEAR)
+
+            # robot.set_position(position([features[CURRENT_BLOCK][0],
+            #                             features[CURRENT_BLOCK][1],
+            #                             0.15],
+            #                             [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
+            #                             speed)
+            # robot.await_motion(asking_interval=0.001)
             robot.set_position(position([features[CURRENT_BLOCK][0],
                                         features[CURRENT_BLOCK][1],
                                         0.04],
