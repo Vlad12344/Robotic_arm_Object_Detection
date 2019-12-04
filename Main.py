@@ -6,7 +6,7 @@ import math
 import numpy as np
 import Utils
 
-from processing.contour_processing import max_contour, angle_center, find_contours
+from processing.contour_processing import max_contour, angle_center, find_contours, sort_contours
 from processing.color_processing import mean_color_in_contour, predict_color
 from processing.image_processing import image_saving, draw_bouding_box, eraze_backgraund, white_balance
 from Detection import feature_vector
@@ -28,8 +28,8 @@ nn_model = Model()
 KMeans = K_Means()
 stream = VideoStream(0)
 robot.change_base(position([0,0,0], [0, 0, 0]))
-roll, pitch = 0.03246304741369637, 0.00466594677358616
-robot.change_base(position([0,0,-0.128], [roll, -pitch, 0]))
+roll, pitch = 0.03330570192296034, -0.008550744727271492
+robot.change_base(position([0,0,-0.1289], [roll, pitch, 0]))
 src = 0
 
 def create_tool(radius, height, name):
@@ -54,26 +54,39 @@ def create_tool(radius, height, name):
 
 create_tool(0.075, 0.065, name='Soska')
 
-def get_coordinates(pose, flange_position):
-    coordinates = pose * transl(flange_position) * transl()
-
 def detect(img, robot_position):
     predict = nn_model.predict(img)[:,:,0]
-    image_saving(predict, name='predict.png')
-    # background_off = erase_background(img, mask=predict)
     contours = find_contours(predict)
     maximum_contour = max_contour(contours)
     angle, centre = angle_center(maximum_contour)
-    # img = white_balance(img, 5)
     mean_color = mean_color_in_contour(img, maximum_contour)
-    pose = Utils.pose(xyz=robot_position, centr=centre)
-    coordinates = 
+    coordinates = Utils.get_pose(xyz=robot_position, centr=centre)
     predicted_color = KMeans.predict(mean_color)
     mask = eraze_backgraund(img, mask=predict)
     # image_with_bbox = draw_bounding_box(img, maximum_contour, centr)
     # image_saving(mask, name="{}.png".format(np.random.randint(0,1000)))
-    features = feature_vector(cordinates, angle, predicted_color)
+    features = [feature_vector(coordinates, angle, predicted_color)]
     return features
+
+# def detect(img, robot_position):
+#     predict = nn_model.predict(img)[:,:,0]
+#     image_saving(predict, name='predict.png')
+#     # background_off = erase_background(img, mask=predict)
+#     contours = find_contours(predict)
+#     contours = sort_contours(contours)[0:5]
+#     features_ = []
+
+#     for contour in contours:
+#         angle, centre = angle_center(contour)
+#         mean_color = mean_color_in_contour(img, contour)
+#         coordinates = Utils.get_pose(xyz=robot_position, centr=centre)
+#         predicted_color = KMeans.predict(mean_color)
+#         # mask = eraze_backgraund(img, mask=predict)
+#         # image_with_bbox = draw_bounding_box(img, maximum_contour, centr)
+#         # image_saving(mask, name="{}.png".format(np.random.randint(0,1000)))
+#         features_.append(feature_vector(coordinates, angle, predicted_color))
+
+#     return features_
 
 # Задание дополнительного смещения
 SHIFT_LIST = [math.pi, 0, -math.pi/4]
@@ -286,12 +299,12 @@ def getting_started():
 
 def pick_new_block():
     global speed, img, features
+    speed = int(interface.comboSpeed.currentText())
+    robot.set_position(camera_position, speed)
+    robot.await_motion(asking_interval=0.001)
+    img = stream.read()
+    features = detect(img,get_coordinates(robot.get_position()))
     if interface.enableColorPalletising.isChecked() or not interface.enableAllDetails.isChecked():
-        speed = int(interface.comboSpeed.currentText())
-        robot.set_position(camera_position, speed)
-        robot.await_motion(asking_interval=0.001)
-        img = stream.read()
-        features = detect(img,get_coordinates(robot.get_position()))
         if type(features) != str:
             # robot.set_position(position([features[0][0], features[0][1], 0.35],
             #                             [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
@@ -321,7 +334,6 @@ def pick_new_block():
             return None
     elif not interface.enableColorPalletising.isChecked() or interface.enableAllDetails.isChecked():
         if type(features) != str:
-
             target_positions = [position([features[CURRENT_BLOCK][0], features[CURRENT_BLOCK][1], 0.15], [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
                                 position([features[CURRENT_BLOCK][0], features[CURRENT_BLOCK][1], 0.04], [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]])]
 

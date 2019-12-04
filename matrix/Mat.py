@@ -128,7 +128,7 @@ def transl(tx,ty=None,tz=None):
 
 def invH(matrix):
     """Returns the inverse of a homogeneous matrix"""
-    return np.transpose(matrix)
+    return np.linalg.inv(matrix)
 
 def transpose(H):
     return np.transpose(H)
@@ -149,7 +149,7 @@ def dim3_2_dim4(M):
     :param M: 3 dimensional matrix
     """
     H = np.eye(4)
-    shape = M.shape()
+    shape = M.shape
     H[0:shape[0], 0:shape[1]] = M
 
     return H

@@ -59,25 +59,17 @@ def get_pose(xyz=None, centr=None):
 
     X = np.array([centr[0], centr[1], 1])
     K = np.load(join(project_root, 'July_project\data\cameradata\\newcam_mtx.npy'))
-    K = dim3_2_dim4(K)
 
     R = np.array([[0, 1, 0],
                   [1, 0, 0],
                   [0, 0, 1]])
 
-    R = dim3_2_dim4(R)
     K_inv = invH(K)
     Z = z_relative_tothe_camera(xyz[2])
-    # T_flange = np.array([xyz[0], xyz[1], 0])
-    # T_cam = np.array(CAMERA_SHIFTING)
-    # T = T_flange + T_cam
-    # coordinates = K_inv.dot(X).dot(R) * Z + T
-    pose = K_inv.dot(X).dot(R) * Z
-    # return {'x':coordinates[0], 'y':coordinates[1], 'z':coordinates[2]}
-    return pose
-
-def get_coordinates(pose, flange_position, shifting):
-    coordinates = pose.dot(transpose(flange_position)).dot(transpose(shifting))
+    T_flange = np.array([xyz[0], xyz[1], 1])
+    T_cam = np.array(CAMERA_SHIFTING)
+    T = T_flange + T_cam
+    coordinates = K_inv.dot(X).dot(R) * Z + T
     return {'x':coordinates[0], 'y':coordinates[1], 'z':coordinates[2]}
 
 def save_matrix(path, matrix):
@@ -100,7 +92,8 @@ def distance_between_planes(z_old, z_new):
     :param z_new: distance between camera matrix and chessboard calibration desk
     """
     # distance between camera matrix and zero base
-    z_old = z_old + config.TOOL_HEIGHT + config.CAMERA_SHIFTING[2] - config.CHESSBOARD_THICKNESS
+    z_old = z_old + TOOL_HEIGHT
+    z_new = z_new + TOOL_SHIFTING_Z + CHESSBOARD_THICKNESS
 
     return z_old - z_new
 
