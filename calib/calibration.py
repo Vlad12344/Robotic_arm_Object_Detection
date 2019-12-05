@@ -17,10 +17,6 @@ from Mat import matrix_mult, transl, rot_2_euler
 from math import cos, sin, radians, degrees, tan, sqrt, pi, atan2
 from Mat import RRPosition_2_xyzrpw, xyzrpw_2_pose, pose_2_RRPosition, Pose_2_TxyzRxyz
 
-COLIBRATION_POSITION = [[-0.2, -0.3, 0.3], [-3.14, 0, 0]]
-NUMBER_OF_IMAGES = 30
-CAMERA_INCLINATION = 20
-
 def rm_files(folder):
     try:
         os.chdir(join(project_root, folder))

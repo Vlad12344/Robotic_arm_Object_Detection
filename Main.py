@@ -14,6 +14,8 @@ from Camera import VideoStream
 from NNModel import Model
 from UI import UI
 from K_Means_model import K_Means
+import cv2
+import time
 
 # Настройка робота
 robot = RobotPulse('10.10.10.20:8081')
@@ -28,8 +30,8 @@ nn_model = Model()
 KMeans = K_Means()
 stream = VideoStream(0)
 robot.change_base(position([0,0,0], [0, 0, 0]))
-roll, pitch = 0.03330570192296034, -0.008550744727271492
-robot.change_base(position([0,0,-0.1289], [roll, pitch, 0]))
+roll, pitch = -0.016667, 0.012
+robot.change_base(position([0,0,-0.132], [-roll, -pitch, 0]))
 src = 0
 
 def create_tool(radius, height, name):
@@ -52,7 +54,7 @@ def create_tool(radius, height, name):
     else:
         raise AssertionError('Incorrect tool parameters')
 
-create_tool(0.075, 0.065, name='Soska')
+create_tool(0.075, 0.070, name='Soska')
 
 def detect(img, robot_position):
     predict = nn_model.predict(img)[:,:,0]
@@ -312,7 +314,7 @@ def pick_new_block():
             target_positions=[position([features[0][0], features[0][1], 0.04], [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
                               position([features[0][0], features[0][1], 0.15], [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]])]
 
-            robot.await_motion(asking_interval=0.001)
+            robot.await_motion(asking_interval=0.01)
             robot.set_position(position([features[0][0], features[0][1], 0.04],
                                         [SHIFT_LIST[0], SHIFT_LIST[1], SHIFT_LIST[2]]),
                                         speed,

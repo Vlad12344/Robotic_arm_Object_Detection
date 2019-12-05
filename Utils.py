@@ -59,6 +59,7 @@ def get_pose(xyz=None, centr=None):
 
     X = np.array([centr[0], centr[1], 1])
     K = np.load(join(project_root, 'July_project\data\cameradata\\newcam_mtx.npy'))
+    print(K)
 
     R = np.array([[0, 1, 0],
                   [1, 0, 0],
@@ -93,7 +94,7 @@ def distance_between_planes(z_old, z_new):
     """
     # distance between camera matrix and zero base
     z_old = z_old + TOOL_HEIGHT
-    z_new = z_new + TOOL_SHIFTING_Z + CHESSBOARD_THICKNESS
+    z_new = z_new + CHESSBOARD_THICKNESS
 
     return z_old - z_new
 
