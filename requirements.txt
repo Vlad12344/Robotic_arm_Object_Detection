@@ -28,7 +28,7 @@ networkx==2.4
 numpy==1.17.3
 opencv-python==4.1.1.26
 pdhttp==1.5.0
-Pillow==6.2.1
+Pillow==9.0.1
 pkg-resources==0.0.0
 protobuf==3.10.0
 public==2019.4.13
